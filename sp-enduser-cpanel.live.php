@@ -10,7 +10,7 @@ if (!isset($_COOKIE['timezone']))
 
 // Cpanel API
 require_once '/usr/local/cpanel/php/cpanel.php';
-$cpanel = &new CPANEL();
+$cpanel = new CPANEL();
 
 // For some reason, querying 'listpops' when signed in as a domain
 // owner returns only the username, while logging in as a specific
