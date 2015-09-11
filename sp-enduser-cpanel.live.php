@@ -41,13 +41,13 @@ else
 require_once 'settings.php';
 
 $get = http_build_query(
-		array(
-			'username' => $_SERVER['REMOTE_USER'],
-			'api-key' => $apikey
-		)
-	);
-$opts = array('http' =>
 	array(
+		'username' => $_SERVER['REMOTE_USER'],
+		'api-key' => $apikey
+	)
+);
+$opts = array(
+	'http' => array(
 		'method'  => 'POST',
 		'header'  => 'Content-type: application/x-www-form-urlencoded',
 		'content' => http_build_query(array('access' => $access))
