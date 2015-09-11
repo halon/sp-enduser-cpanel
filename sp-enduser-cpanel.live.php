@@ -8,8 +8,11 @@ if (isset($_GET['timezone'])) setcookie('timezone', intval($_GET['timezone']));
 if (!isset($_COOKIE['timezone']))
 	die('<script>window.location.href = "?timezone=" + new Date().getTimezoneOffset();</script>');
 
-// Cpanel API
+// Includes
 require_once '/usr/local/cpanel/php/cpanel.php';
+require_once 'settings.php';
+
+// Cpanel API
 $cpanel = new CPANEL();
 
 // For some reason, querying 'listpops' when signed in as a domain
@@ -37,8 +40,6 @@ else
 		die("No Addresses");
 	$access = array('mail' => $addresses);
 }
-
-require_once 'settings.php';
 
 $get = http_build_query(
 	array(
