@@ -87,7 +87,7 @@ if $INSTALLED; then
 	echo '<cpanelfeature sp-enduser>'
     echo '	<td>'
     echo '		<div valign="top" align="center">'
-    echo '			<a href="../../3rdparty/sp-enduser/sp-enduser-cpanel.live.php" target="_blank"><img src="../../3rdparty/sp-enduser/static/img/sp-logo-small.png" border="0" /></a><br /><a href="../../3rdparty/sp-enduser/sp-enduser-cpanel.live.php" target="_blank"><cpanel langprint="Halon Antispam"></a>'
+    echo '			<a href="../../3rdparty/sp-enduser/index.live.php" target="_blank"><img src="../../3rdparty/sp-enduser/static/img/sp-logo-small.png" border="0" /></a><br /><a href="../../3rdparty/sp-enduser/index.live.php" target="_blank"><cpanel langprint="Halon Antispam"></a>'
     echo '		</div>'
 	echo '	</td>'
 	echo '</cpanelfeature>'

@@ -3,7 +3,7 @@ version: 1.0
 name:sp-enduser
 description:Halon SP cPanel Plugin
 featuremanager:1
-url:/3rdparty/sp-enduser/sp-enduser-cpanel.live.php
+url:/3rdparty/sp-enduser/index.live.php
 acontent:target="_blank"
 onclick:
 if:
