@@ -41,6 +41,10 @@ else
 	$access = array('mail' => $addresses);
 }
 
+$enduser = $settings['enduser'];
+if (substr($enduser, -1) == '/')
+	$enduser = substr($enduser, 0, -1);
+
 $get = http_build_query(
 	array(
 		'username' => $_SERVER['REMOTE_USER'],
@@ -55,8 +59,8 @@ $opts = array(
 	)
 );
 $context = stream_context_create($opts);
-$result = json_decode(@file_get_contents($settings['enduser'].'session-transfer.php?'.$get, false, $context));
+$result = json_decode(@file_get_contents($enduser.'/session-transfer.php?'.$get, false, $context));
 if (!$result || !isset($result->session))
 	die('Transfer failed');
 
-header('Location: '.$settings['enduser'].'session-transfer.php?session='.$result->session);
+header('Location: '.$enduser.'/session-transfer.php?session='.$result->session);
