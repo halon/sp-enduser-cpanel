@@ -1,8 +1,4 @@
 <?php
-// Non-cPanel users should use the regular version instead
-if (!isset($_SERVER['CPANEL']) || $_SERVER['CPANEL'] != 'active')
-	die();
-
 // Get timezone offset from client
 if (isset($_GET['timezone'])) setcookie('timezone', intval($_GET['timezone']));
 if (!isset($_COOKIE['timezone']))
