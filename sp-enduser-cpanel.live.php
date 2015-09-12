@@ -10,7 +10,7 @@ if (!isset($_COOKIE['timezone']))
 
 // Includes
 require_once '/usr/local/cpanel/php/cpanel.php';
-require_once 'settings.php';
+require_once 'sp-enduser-settings.php';
 
 // Cpanel API
 $cpanel = new CPANEL();
