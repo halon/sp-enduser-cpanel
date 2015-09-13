@@ -4,36 +4,29 @@ if (isset($_GET['timezone'])) setcookie('timezone', intval($_GET['timezone']));
 if (!isset($_COOKIE['timezone']))
 	die('<script>window.location.href = "?timezone=" + new Date().getTimezoneOffset();</script>');
 
-// Includes
 require_once '/usr/local/cpanel/php/cpanel.php';
 require_once 'settings.php';
 
-// Cpanel API
 $cpanel = new CPANEL();
 
-// For some reason, querying 'listpops' when signed in as a domain
-// owner returns only the username, while logging in as a specific
-// email address returns that address (and likely aliases as well)
-if(strpos($_SERVER['REMOTE_USER'], '@') === false)
-{
-	// It's the domain owner, give them access to everything
-	$domains_res = $cpanel->api2('Email', 'listmaildomains');
+if (strpos($_SERVER['REMOTE_USER'], '@') === false) {
+	// cPanel users, give them access to their domains
+	$domains_res = $cpanel->uapi('Email', 'list_mail_domains');
 	$domains = array();
-	foreach($domains_res['cpanelresult']['data'] as $data)
+	foreach ($domains_res['cpanelresult']['result']['data'] as $data)
 		$domains[] = $data['domain'];
-	if(empty($domains))
-		die("No Domains");
+	if (empty($domains))
+		die("No domains");
 	$access = array('domain' => $domains);
 }
-else
-{
-	// It's an email user, give them access to their own account
-	$addresses_res = $cpanel->api2('Email', 'listpops');
+else {
+	// Webmail users, give them access to their email addresses 
+	$addresses_res = $cpanel->uapi('Email', 'list_pops');
 	$addresses = array();
-	foreach($addresses_res['cpanelresult']['data'] as $data)
+	foreach ($addresses_res['cpanelresult']['result']['data'] as $data)
 		$addresses[] = $data['email'];
-	if(empty($addresses))
-		die("No Addresses");
+	if (empty($addresses))
+		die("No email addresses");
 	$access = array('mail' => $addresses);
 }
 
