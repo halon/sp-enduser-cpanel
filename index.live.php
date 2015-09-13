@@ -1,7 +1,7 @@
 <?php
 // Get timezone offset from client
-if (isset($_GET['timezone'])) setcookie('timezone', intval($_GET['timezone']));
-if (!isset($_COOKIE['timezone']))
+if (isset($_GET['timezone'])) $timezone = intval($_GET['timezone']);
+if (!isset($_GET['timezone']))
 	die('<script>window.location.href = "?timezone=" + new Date().getTimezoneOffset();</script>');
 
 require_once '/usr/local/cpanel/php/cpanel.php';
@@ -37,7 +37,8 @@ if (substr($enduser, -1) == '/')
 $get = http_build_query(
 	array(
 		'username' => $_SERVER['REMOTE_USER'],
-		'api-key' => $settings['api-key']
+		'api-key' => $settings['api-key'],
+		'timezone' => $timezone
 	)
 );
 $opts = array(
