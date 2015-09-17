@@ -8,7 +8,7 @@ set -e
 
 if [ $EUID -ne 0 ]; then
 	echo "This script requires root privileges, please run it as root, or with:"
-	echo "    sudo ./cpanel-uninstall.sh"
+	echo "    sudo ./uninstall.sh"
 	exit 1
 fi
 

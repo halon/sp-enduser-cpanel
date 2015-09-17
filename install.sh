@@ -5,7 +5,7 @@ set -e
 
 if [ $EUID -ne 0 ]; then
 	echo "This script requires root privileges, please run it as root, or with:"
-	echo "    sudo ./cpanel-install.sh"
+	echo "    sudo ./install.sh"
 	exit 1
 fi
 
@@ -37,7 +37,7 @@ if [[ "$DIR" != "$DEST" ]]; then
 		echo "An existing installation has been found:"
 		echo "$DEST"
 		echo ""
-		echo "Please either run 'git pull' and './cpanel-install.sh' in the existing"
+		echo "Please either run 'git pull' and './install.sh' in the existing"
 		echo "installation to update it, or move it aside to set up a new installation."
 		exit 1
 	else
