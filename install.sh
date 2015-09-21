@@ -1,96 +1,62 @@
 #!/bin/bash
 
-# Exit if anything errors; better safe than sorry
-set -e
+set -e # Abort script at first error
+
+cwd=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+install_plugin='/usr/local/cpanel/scripts/install_plugin'
+dst='/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel'
 
 if [ $EUID -ne 0 ]; then
-	echo "This script requires root privileges, please run it as root, or with:"
-	echo "    sudo ./install.sh"
+	echo 'Script requires root privileges, run it as root or with sudo'
 	exit 1
 fi
 
-if [ ! -x '/usr/local/cpanel/bin/register_cpanelplugin' ];
-then
-	echo "Can't seem to find register_cpanelplugin, is cPanel installed properly?"
+if [ ! -f /usr/local/cpanel/version ]; then
+	echo 'cPanel installation not found'
 	exit 1
 fi
 
-
-
-# Figure out where we are; relative paths are evil
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-# Destination paths, because nobody likes repeating themselves
-DEST="/usr/local/cpanel/base/3rdparty/sp-enduser"
-
-# Has something been installed?
-INSTALLED=false
-
-
-
-
-# Only move things if they're not already in the right place
-if [[ "$DIR" != "$DEST" ]]; then
-	
-	# If there's an old (copied) installation, abort and tell the user
-	if [[ -d $DEST ]]; then
-		echo "An existing installation has been found:"
-		echo "$DEST"
-		echo ""
-		echo "Please either run 'git pull' and './install.sh' in the existing"
-		echo "installation to update it, or move it aside to set up a new installation."
-		exit 1
-	else
-		echo "Installing SP-Enduser's cPanel plugin to:"
-		echo "$DEST"
-		
-		cp -Rf "$DIR" "$DEST"
-		INSTALLED=true
-	fi
-else
-	echo "Already installed, would you like to re-register the plugin with cPanel?"
-	select action in "Yes" "No"; do
-		case $action in
-			"Yes") break;;
-			"No") exit 0;;
-		esac
-	done
-fi
-
-# Register the plugin with cPanel; output is written
-echo ""
-echo "Registering the plugin with cPanel... (this may take a while)"
-if /usr/local/cpanel/bin/register_cpanelplugin $DIR/cpanel-sp-enduser.cpanelplugin > $DIR/register_cpanelplugin.log; then
-	# If the installation succeeds, just quietly delete the log file
-	rm $DIR/register_cpanelplugin.log
-else
-	echo " -> Couldn't register the plugin!"
-	echo "    Output has been written to:"
-	echo "    $DIR/register_cpanelplugin.log"
+if [ ! -x $install_plugin ]; then
+	echo 'cPanel version 11.44 or later required'
 	exit 1
 fi
 
-if $INSTALLED; then
-	echo ""
-	echo "Halon SP-Enduser's cPanel plugin has been successfully installed!"
-	echo ""
-	echo "You can safely delete this directory, it has been copied to:"
-	echo "$DEST"
-	echo ""
-	echo "If you want to show a logo for Halon Antispam on the webmail login page:"
-	echo ""
-	echo "1. Open /usr/local/cpanel/base/webmail/x3/index.html"
-	echo "2. Locate the block that starts with <cpanelfeature emailtrace> and ends with"
-	echo "   </cpanelfeature>"
-	echo "3. Add the following below said block, but before the </cpanelif>:"
-	echo ""
-	echo '<cpanelfeature sp-enduser>'
-    echo '	<td>'
-    echo '		<div valign="top" align="center">'
-    echo '			<a href="../../3rdparty/sp-enduser/index.live.php" target="_blank"><img src="../../3rdparty/sp-enduser/static/img/sp-logo-small.png" border="0" /></a><br /><a href="../../3rdparty/sp-enduser/index.live.php" target="_blank"><cpanel langprint="Halon Antispam"></a>'
-    echo '		</div>'
-	echo '	</td>'
-	echo '</cpanelfeature>'
-	echo ""
-	echo "To configure the SP-Enduser plugin, edit settings.php."
+if [ -d $dst ]; then
+	echo "Existing installation found, try running the uninstall script first"
+	exit 1
 fi
+
+mkdir -v $dst
+cp -v ${cwd}/index.live.php $dst
+cp -v ${cwd}/settings.php $dst
+
+themes=('paper_lantern' 'x3')
+
+for theme in ${themes[@]}; do
+	$install_plugin ${cwd}/plugins/${theme} --theme $theme
+done
+
+echo 'Install webmail plugin?'
+select action in "Yes" "No"; do
+	case $action in
+		"Yes")
+			webmail=true
+			break;
+			;;
+		"No")
+			webmail=false
+			break;
+			;;
+		*)
+			echo 'Invalid option'
+			;;
+	esac
+done
+
+if [ "$webmail" = true ]; then
+	cp -v ${cwd}/plugins/webmail/icon-314x109.png $dst
+	${cwd}/plugins/webmail/register.pl
+fi
+
+echo 'Installation finished without errors'
+echo "Edit '${dst}/settings.php' to configure the plugin"
