@@ -21,7 +21,7 @@ if [ ! -x $uninstall_plugin ]; then
 	exit 1
 fi
 
-themes=('paper_lantern' 'x3')
+themes=('paper_lantern')
 
 for theme in ${themes[@]}; do
 	$uninstall_plugin ${cwd}/plugins/${theme} --theme $theme

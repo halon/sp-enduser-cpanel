@@ -1,9 +1,0 @@
-{
-	"icon" : "icon-32x32.png",
-	"group_id" : "mail",
-	"order" : 10000,
-	"name" : "Halon Anti-spam",
-	"type" : "link",
-	"id" : "sp-enduser-cpanel",
-	"uri" : "/3rdparty/sp-enduser-cpanel/index.live.php"
-}

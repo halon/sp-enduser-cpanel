@@ -30,7 +30,7 @@ mkdir -v $dst
 cp -v ${cwd}/index.live.php $dst
 cp -v ${cwd}/settings.php $dst
 
-themes=('paper_lantern' 'x3')
+themes=('paper_lantern')
 
 for theme in ${themes[@]}; do
 	$install_plugin ${cwd}/plugins/${theme} --theme $theme
